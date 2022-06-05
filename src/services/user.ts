@@ -1,10 +1,9 @@
 // import { ObjectId } from "mongodb";
 import { getDb } from "../gateway/mongo";
-import { ObjectId } from "mongodb";
 
 export interface User {
-  id?: ObjectId;
-  //createAt: Date;
+  //id?: ObjectId;
+  createAt: number;
   firstName: string;
   lastName: string;
   DOBm: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
@@ -17,30 +16,29 @@ export const getUserCollection = async () => {
   return db.collection<User>("user");
 };
 
-// Create new user (Sign up page)
-export const createUser = async (newUser: User) => {
-  const col = await getUserCollection();
-  const { insertedId } = await col.insertOne(newUser);
-  return insertedId.toString();
-};
-
-// Return the user by email (Login Page)
-export const getUserByEmail = async (email: string) => {
-  const col = await getUserCollection();
-  const ret = col.find({
-    email: {
-      $regex: `.*${email}.*`,
-    },
-  });
-  return ret.toArray();
-};
-
 // return all registered users in the app (admin)
-export const getUser = async (userId: string) => {
+export const getAllUsers = async () => {
   const col = await getUserCollection();
-  const ret = col.find({ userId });
-  return ret.toArray();
+  return col.find().toArray();
 };
+
+// // Create new user (Sign up page)
+// export const createUser = async (newUser: User) => {
+//   const col = await getUserCollection();
+//   const { insertedId } = await col.insertOne(newUser);
+//   return insertedId.toString();
+// };
+
+// // Return the user by email (Login Page)
+// export const getUserByEmail = async (email: string) => {
+//   const col = await getUserCollection();
+//   const ret = col.find({
+//     email: {
+//       $regex: `.*${email}.*`,
+//     },
+//   });
+//   return ret.toArray();
+// };
 
 // The code commented bellow is not mandatory at this point - Phase 5
 //

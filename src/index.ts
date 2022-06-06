@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
-import { createUser, getAllUsers } from "./services/user";
+import { closeDBConnection, createUser, getAllUsers } from "./services/user";
 import { getAllFoods } from "./services/food";
 import { getAllCPW } from "./services/cpw";
 
@@ -14,12 +14,14 @@ app.use(cors());
 app.get("/allusers", async (req, res) => {
   const allusers = await getAllUsers();
   res.status(200).send(allusers);
+  closeDBConnection();
 });
 
 app.post("/createuser", async (req, res) => {
   try {
     await createUser(req.body);
     res.sendStatus(200);
+    closeDBConnection();
   } catch (err) {
     // send the response a json object instead of text
     res.status(400).send({
@@ -31,11 +33,13 @@ app.post("/createuser", async (req, res) => {
 app.get("/allfoods", async (req, res) => {
   const allfoods = await getAllFoods();
   res.status(200).send(allfoods);
+  closeDBConnection();
 });
 
 app.get("/allcpw", async (req, res) => {
   const allcpw = await getAllCPW();
   res.status(200).send(allcpw);
+  closeDBConnection();
 });
 
 // app.post("/signup", async (req, res) => {

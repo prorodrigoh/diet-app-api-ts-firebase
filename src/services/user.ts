@@ -1,5 +1,5 @@
 // import { ObjectId } from "mongodb";
-import { getDb } from "../gateway/mongo";
+import { closeDb, getDb } from "../gateway/mongo";
 
 export interface User {
   //id?: ObjectId;
@@ -10,6 +10,10 @@ export interface User {
   DOBy: number;
   email: string;
 }
+
+export const closeDBConnection = async () => {
+  const db = await closeDb();
+};
 
 export const getUserCollection = async () => {
   const db = await getDb();

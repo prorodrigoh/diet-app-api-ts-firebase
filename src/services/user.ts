@@ -22,12 +22,12 @@ export const getAllUsers = async () => {
   return col.find().toArray();
 };
 
-// // Create new user (Sign up page)
-// export const createUser = async (newUser: User) => {
-//   const col = await getUserCollection();
-//   const { insertedId } = await col.insertOne(newUser);
-//   return insertedId.toString();
-// };
+// Create new user (Sign up page)
+export const createUser = async (newUser: User) => {
+  const col = await getUserCollection();
+  const { insertedId } = await col.insertOne(newUser);
+  return insertedId.toString();
+};
 
 // // Return the user by email (Login Page)
 // export const getUserByEmail = async (email: string) => {

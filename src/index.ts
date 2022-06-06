@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
-import { getAllUsers } from "./services/user";
+import { createUser, getAllUsers } from "./services/user";
 import { getAllFoods } from "./services/food";
 import { getAllCPW } from "./services/cpw";
 
@@ -14,6 +14,18 @@ app.use(cors());
 app.get("/allusers", async (req, res) => {
   const allusers = await getAllUsers();
   res.status(200).send(allusers);
+});
+
+app.post("/createuser", async (req, res) => {
+  try {
+    await createUser(req.body);
+    res.sendStatus(200);
+  } catch (err) {
+    // send the response a json object instead of text
+    res.status(400).send({
+      message: "User creation is not Possible",
+    });
+  }
 });
 
 app.get("/allfoods", async (req, res) => {

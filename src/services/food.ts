@@ -1,15 +1,15 @@
-// import { ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { getDb } from "../gateway/mongo";
 // import { calculateCaloriesFromNew, getFoodCaloriesPerWeight } from "./cpw";
 
 export interface Food {
-  // id?: ObjectId;
+  _id?: string;
   createAt: number;
   userId: string;
-  name: string;
-  ISOWeight: number;
-  ISOUnit: "g";
-  ISOCalories: number;
+  foodName: string;
+  isoWeight: number;
+  isoUnit: string;
+  isoCalories: number;
 }
 
 export const getFoodCollection = async () => {
@@ -23,58 +23,33 @@ export const getAllFoods = async () => {
   return col.find().toArray();
 };
 
-// // User already exists.
-// // CREATE a new food by pressing the Create New button in the FOOD PAGE
-// // body will have the field userId: ObjectId; name: string; ISOWeight: number; ISOUnit: "g"; ISOCalories: number;
-// // ADD existing food weight and calories.
-// // body will have userId: ObjectId; UserFoodId: ObjectId; weight: number;
-// export const createUserFood = async (data: any) => {
-//   // if the food is already in the DB thrown error. Should be selected from the list
-//   if (!data.name || !data.ISOWeight || !data.ISOCalories) {
-//     throw new Error("Fill all fields to create new food");
-//   }
+export const getFoodById = async (_id: string) => {
+  const col = await getFoodCollection();
+  return col.find({ _id: _id }).toArray();
+};
 
-//   //const createdAt = new Date();
-//   const userId = data.userId;
-//   const name = data.name;
-//   const ISOWeight = data.ISOWeight;
-//   const ISOUnit = "g";
-//   const ISOCalories = data.ISOCalories;
+export const getAllFoodsByUser = async (userId: string) => {
+  const col = await getFoodCollection();
+  return col.find({ userId: userId }).toArray();
+};
 
-//   //prepData = { createdAt, userId, name, ISOWeight, ISOUnit, ISOCalories };
-//   const prepData = { userId, name, ISOWeight, ISOUnit, ISOCalories };
+// User already exists.
+// CREATE a new food by pressing the Create New button in the FOOD PAGE
+// body will have the field userId: ObjectId; name: string; ISOWeight: number; ISOUnit: "g"; ISOCalories: number;
+// ADD existing food weight and calories.
+// body will have userId: ObjectId; UserFoodId: ObjectId; weight: number;
 
-//   // add data to UserFood Collection
-//   const col = await getUserFoodCollection();
-//   const insertedResults = col.insertOne(prepData);
-//   const insertedId = insertedResults.insertedId;
+export const createFood = async (data: any) => {
+  // if the food is already in the DB thrown error. Should be selected from the list
+  if (!data.foodName || !data.isoWeight || !data.isoCalories) {
+    return "Food fields incomplete";
+  }
 
-//   // with the inserted ID we calculate the calories and add the values to Food CPW collection
-//   const weight = data.weight;
-//   const cal = calculateCaloriesFromNew(weight, ISOWeight, ISOCalories);
-
-//   const prepDataCal = { weight, cal, insertedId };
-//   const colCal = await getFoodCaloriesPerWeight();
-//   const { insertedIdFcpw } = colCal.insertOne(prepDataCal);
-
-//   const listOfFoods = await getUserFoodByUserId(userId);
-//   return listOfFoods;
-// };
-
-// //when user select one of the foods that already exist
-// export const addUserFood = async (foodId: string, foodWeight: number) => {
-//   // get food from list by id
-//   const foodData = getISOFoodByFoodId(foodId);
-//   // get ISO values
-//   const ISOWeight = foodData.ISOWeight;
-//   const ISOCalories = foodData.ISOCalories;
-//   // calculate
-//   const cal = calculateCaloriesFromNew(foodWeight, ISOWeight, ISOCalories);
-//   // save the calculated values
-//   const prepDataCal = { foodWeight, cal, foodId };
-//   const colCal = await getFoodCaloriesPerWeight();
-//   const { insertedIdFcpw } = colCal.insertOne(prepDataCal);
-// };
+  // add data to UserFood Collection
+  const col = await getFoodCollection();
+  const { insertedId } = await col.insertOne(data);
+  return insertedId;
+};
 
 // // Return the list of foods created by the user in the HOME PAGE
 // export const getUserFoodByUserId = async (id: string) => {

@@ -21,11 +21,19 @@ export const getAllCPW = async () => {
   return col.find().toArray();
 };
 
-// export const calculateCaloriesFromNew = (
-//   weight: number,
-//   ISOc: number,
-//   ISOw: number
-// ) => {
-//   const calories = (weight * ISOc) / ISOw;
-//   return calories;
-// };
+export const getCPWByFoodId = async (foodId: string) => {
+  const col = await getCaloriesPerWeight();
+  return col.find({ foodId }).toArray();
+};
+
+export const createCPW = async (data: any) => {
+  // if the food is already in the DB thrown error. Should be selected from the list
+  if (!data.foodId || !data.foodWeight || !data.foodCalories) {
+    return "Food fields incomplete";
+  }
+
+  // add data to UserFood Collection
+  const col = await getCaloriesPerWeight();
+  const { insertedId } = await col.insertOne(data);
+  return insertedId;
+};

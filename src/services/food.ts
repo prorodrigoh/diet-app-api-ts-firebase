@@ -23,9 +23,9 @@ export const getAllFoods = async () => {
   return col.find().toArray();
 };
 
-export const getFoodById = async (_id: string) => {
+export const getFoodById = async (id: ObjectId) => {
   const col = await getFoodCollection();
-  return col.find({ _id: _id }).toArray();
+  return col.findOne({ _id: id as any });
 };
 
 export const getAllFoodsByUser = async (userId: string) => {

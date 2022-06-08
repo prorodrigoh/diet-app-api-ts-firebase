@@ -9,6 +9,7 @@ import {
   getFoodById,
 } from "./services/food";
 import { createCPW, getAllCPW } from "./services/cpw";
+import { ObjectId } from "mongodb";
 
 config();
 
@@ -19,14 +20,14 @@ app.use(cors());
 app.get("/allusers", async (req, res) => {
   const allusers = await getAllUsers();
   res.status(200).send(allusers);
-  closeDBConnection();
+  // closeDBConnection();
 });
 
 app.post("/createuser", async (req, res) => {
   try {
     await createUser(req.body);
     res.sendStatus(200);
-    closeDBConnection();
+    // closeDBConnection();
   } catch (err) {
     // send the response a json object instead of text
     res.status(400).send({
@@ -38,7 +39,7 @@ app.post("/createuser", async (req, res) => {
 app.get("/allfoods", async (req, res) => {
   const allfoods = await getAllFoods();
   res.status(200).send(allfoods);
-  closeDBConnection();
+  // closeDBConnection();
 });
 
 // This will create a new food in the DB
@@ -65,13 +66,14 @@ app.get("/allfoodsbyuser", async (req, res) => {
       message: "Problems with user " + req.body,
     });
   }
-  closeDBConnection();
+  // closeDBConnection();
 });
 
 //
-app.get("/foodbyid", async (req, res) => {
+app.get("/foodbyid/:id", async (req, res) => {
   try {
-    const foodbyid = await getFoodById(req.body);
+    const id = new ObjectId(req.params as any);
+    const foodbyid = await getFoodById(id as any);
     res.status(200).send(foodbyid);
   } catch (err) {
     // send the response a json object instead of text
@@ -79,13 +81,12 @@ app.get("/foodbyid", async (req, res) => {
       message: "Problems with food " + req.body,
     });
   }
-  closeDBConnection();
 });
 //
 app.get("/allcpw", async (req, res) => {
   const allcpw = await getAllCPW();
   res.status(200).send(allcpw);
-  closeDBConnection();
+  // closeDBConnection();
 });
 
 app.post("/createcpw", async (req, res) => {
